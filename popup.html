@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Archive Extension</title>
+  <style>
+    body {
+      margin: 0;
+	   width: 500px; 
+      height: 300px; 
+      font-family: 'Roboto', sans-serif;
+      background: #f9f9f9;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+      padding: 10px 0;
+    }
+
+    .tabs div {
+      flex-grow: 1;
+      text-align: center;
+      padding: 12px;
+    }
+
+    .tabs div.active {
+      background-color: #388E3C;
+    }
+
+    .content {
+      padding: 20px;
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+
+    .content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: none;
+      font-size: 14px;
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px 0;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 10px 0;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #388E3C;
+    }
+
+    .checkbox-group {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+
+    label {
+      font-size: 14px;
+    }
+
+    a {
+      color: #4CAF50;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .donation-section {
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 10px;
+      border-collapse: collapse;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .status-code-green {
+      background-color: #dff0d8;
+      color: #3c763d;
+    }
+
+    .status-code-blue {
+      background-color: #d9edf7;
+      color: #31708f;
+    }
+
+    .status-code-red {
+      background-color: #f2dede;
+      color: #a94442;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+
+    .pagination button {
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .pagination button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    .pagination button:hover:not(:disabled) {
+      background-color: #388E3C;
+    }
+
+    @media only screen and (max-width: 500px) {
+      .tabs div {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      .button {
+        font-size: 14px;
+      }
+
+      textarea, input[type="text"] {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="tabs">
+    <div id="tab-insert" class="active">Insert URL</div>
+	<div id="tab-bulk-open">Bulk URL Opener</div>
+    <div id="tab-check">Check URLs</div>
+    <div id="tab-about">About</div>
+  </div>
+
+  <div id="content-insert" class="content active">
+    <h3>Insert URL</h3>
+    <input type="text" id="urlInput" placeholder="Enter URL" />
+    <input type="text" id="fileNameInput" placeholder="Enter File Name" />
+    <button class="button" id="insertButton">Go</button>
+    <button class="button" id="saveButton">Save Result</button>
+  </div>
+
+  <div id="content-check" class="content">
+    <h3>Check URLs for Existence</h3>
+    <textarea id="checkUrlsInput" placeholder="Paste URLs (one per line)" rows="5"></textarea>
+    <button class="button" id="checkUrlsButton">Check URLs</button>
+
+    <table id="urlStatusTable">
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Status Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamic content -->
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <button class="button" id="prevPage" disabled>Previous</button>
+      <button class="button" id="nextPage">Next</button>
+    </div>
+  </div>
+
+  <div id="content-bulk-open" class="content">
+    <h3>Bulk URL Opener</h3>
+    <textarea id="bulkUrlsInput" placeholder="Paste URLs (one per line)" rows="5"></textarea>
+    
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="useHttp"> HTTP</label>
+      <label><input type="checkbox" id="useHttps" checked> HTTPS</label>
+    </div>
+    
+    <button class="button" id="openBulkUrlsButton">Open URLs</button>
+  </div>
+
+  <div id="content-about" class="content">
+    <h3>About</h3>
+    <p>You can reach out to me via the following platforms:</p>
+    
+    <ul>
+      <li><a href="https://x.com/intruXpert" target="_blank">Twitter</a></li>
+      <li><a href="https://github.com/intruXpert" target="_blank">GitHub</a></li>
+      <li><a href="https://intruXpert.com" target="_blank">Website</a></li>
+    </ul>
+    
+    <div class="donation-section">
+      <h4>Support Me</h4>
+      <p>If you like this extension, consider donating via cryptocurrency:</p>
+      <p><strong>USDT (TRON):</strong> TUMiYtejQjuCXZA9iA5H7zMa65vdHBtrRC</p>
+	  <p><strong>BTC:</strong> bc1qhv4x0lt5lwk46gfr5lmpauucck7eaxegcasr6d</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

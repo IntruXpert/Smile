@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "web archive",
+  "version": "1.0",
+  "permissions": ["storage", "activeTab", "tabs", "downloads"],
+  "host_permissions": [
+    "https://web.archive.org/*",
+    "*://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_popup_height": 350, 
+    "default_popup_width": 450
+  },
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  }
+}
